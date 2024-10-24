@@ -4,11 +4,12 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/slipneff/gogger"
-	"github.com/slipneff/gogger/log"
 	"github.com/slipneff/auto-yt/internal/di"
 	"github.com/slipneff/auto-yt/internal/utils/config"
 	"github.com/slipneff/auto-yt/internal/utils/flags"
+	"github.com/slipneff/auto-yt/pkg/clients/youtube"
+	"github.com/slipneff/gogger"
+	"github.com/slipneff/gogger/log"
 )
 
 func main() {
@@ -18,8 +19,22 @@ func main() {
 
 	container := di.New(context.Background(), cfg)
 	log.Info(fmt.Sprintf("Server starting at %s:%d", cfg.Host, cfg.Port))
-	err := container.GetHttpServer().ListenAndServe()
+
+	// err := container.GetYoutubeClient().SearchVideos("новый год")
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	client := container.GetYoutubeClient()
+	client.UploadTokens()
+	err := client.UploadVideo(&youtube.Video{
+		Title:       "test video",
+		Description: "random",
+		FileName:    "files/1.mp4",
+		Category:    "42",
+		Keywords:    "viperr",
+		Privacy:     "unlisted",
+	})
 	if err != nil {
-		log.Panic(err, "Fail serve HTTP")
+		fmt.Println(err)
 	}
 }

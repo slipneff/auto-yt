@@ -6,8 +6,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/slipneff/auto-yt/internal/pkg/router"
-	"github.com/slipneff/auto-yt/internal/pkg/service/jwt"
+	"github.com/slipneff/auto-yt/internal/router"
+	"github.com/slipneff/auto-yt/internal/service/jwt"
+	"github.com/slipneff/auto-yt/pkg/clients/youtube"
 
 	"github.com/slipneff/auto-yt/internal/utils/config"
 )
@@ -19,6 +20,7 @@ type Container struct {
 	handler    *router.Handler
 	httpServer *http.Server
 	jwtService *jwt.Service
+	ytClient   *youtube.Client
 }
 
 func New(ctx context.Context, cfg *config.Config) *Container {
@@ -37,16 +39,18 @@ func (c *Container) GetHttpServer() *http.Server {
 	})
 }
 
-func (c *Container) GetJWTService() *jwt.Service {
-	return get(&c.jwtService, func() *jwt.Service {
-		return jwt.New(c.cfg)
-	})
-}
 func (c *Container) GetHttpHandler() *router.Handler {
 	return get(&c.handler, func() *router.Handler {
 		return router.NewRouter(c.cfg)
 	})
 }
+func (c *Container) GetYoutubeClient() *youtube.Client {
+	return get(&c.ytClient, func() *youtube.Client {
+		return youtube.New(c.cfg)
+	})
+}
+
+
 
 func get[T comparable](obj *T, builder func() T) T {
 	if *obj != *new(T) {

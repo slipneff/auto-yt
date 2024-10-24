@@ -19,20 +19,12 @@ const (
 )
 
 type Config struct {
-	EnvMode         uint8
-	Host            string
-	Port            uint16
-	JWTSecret       string
-	JWTSecretSignUp string
-	PermissionURL   string
-	TokenURL        string
-	MailgunURL      string
-	GoodsURL        string
-	UploaderURL     string
-	UserURL         string
-	ClicksURL       string
-	SitesURL        string
-	BannerURL       string
+	EnvMode      uint8
+	Host         string
+	Port         uint16
+	DeveloperKey string
+	UploaderURL  string
+	JWTSecret    string
 }
 
 func LoadConfig(envMode, path string) (*Config, error) {
