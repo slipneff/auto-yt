@@ -25,6 +25,17 @@ type Config struct {
 	DeveloperKey string
 	UploaderURL  string
 	JWTSecret    string
+	BotToken     string
+	DB           DataBaseConfig
+}
+
+type DataBaseConfig struct {
+	Host     string
+	Port     uint16
+	Username string
+	Name     string
+	Password string
+	SSLMode  string
 }
 
 func LoadConfig(envMode, path string) (*Config, error) {
